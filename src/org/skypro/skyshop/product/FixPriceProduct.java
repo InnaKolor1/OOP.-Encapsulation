@@ -17,8 +17,4 @@ public class FixPriceProduct extends Product {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return String.format("Fix Price! %s: %.2f ₽", getName(), getPrice());
-    }
 }

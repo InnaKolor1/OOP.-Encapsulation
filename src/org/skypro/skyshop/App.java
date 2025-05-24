@@ -8,6 +8,7 @@ import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.product.SimpleProduct;
 import org.skypro.skyshop.search.Searchable;
+import org.skypro.skyshop.exception.BestResultNotFound;
 
 import java.util.Arrays;
 
@@ -60,7 +61,7 @@ public class App {
         printSeparator();
 
         Article article1 = new Article("ПопСокет.", "Это универсальный держатель для телефона.");
-        Article article2 = new Article("USB-C Кабель.","Последовательный интерфейс для подключения периферийных устройств к вычислительной технике.");
+        Article article2 = new Article("USB-C Кабель.", "Последовательный интерфейс для подключения периферийных устройств к вычислительной технике.");
         Article article3 = new Article("Наушники.", "Новая модель и функция шумоподавления.");
 
 
@@ -97,10 +98,22 @@ public class App {
         for (Searchable searchResult : searchResults) {
             if (searchResult != null) {
                 System.out.println("Имя для поиска: " + searchResult.getStringRepresentation());
+                try {
+                    Product product = new SimpleProduct("ПопСокет ", 530);
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Ошибка при создании товара" + e.getMessage());
+                }
+                try {
+                    Product product = new FixPriceProduct(" USB-C Кабель");
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Ошибка при создании товара" + e.getMessage());
+                }
+
             }
         }
     }
 
     public static void printSeparator() {
+
     }
 }

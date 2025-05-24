@@ -2,7 +2,7 @@ package org.skypro.skyshop.product;
 
 import java.util.Objects;
 
-public class DiscountedProduct extends Product {
+public class DiscountedProduct extends Product implements org.skypro.skyshop.search.Searchable {
     private final double price;
     private final int discount;
 
@@ -42,5 +42,16 @@ public class DiscountedProduct extends Product {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), price, discount);
+    }
+         public DiscountedProduct(String nameProduct, int basePrice, int discountPersent) {
+            super(nameProduct);
+            if (basePrice <= 0) {
+                throw new IllegalArgumentException("Базовая цена должна быть больше 0.");
+            }
+            if (discountPersent < 0 || discountPersent > 100) {
+                throw new IllegalArgumentException("Скидка должна быть от 0% до 100%");
+            }
+            this.price = basePrice;
+            this.discount = discountPersent;
     }
 }

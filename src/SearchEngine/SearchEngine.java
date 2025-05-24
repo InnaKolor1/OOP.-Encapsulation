@@ -11,21 +11,22 @@ public final class SearchEngine {
 
         this.searchableItems = new Searchable[size];
     }
-    public void add (Searchable searchable) {
+
+    public void add(Searchable searchable) {
         int Index = getIndex(searchableItems);
         searchableItems[Index] = searchable;
 
     }
 
-    public static <S > int getIndex (S[]array){
+    public static <S> int getIndex(S[] array) {
         for (int i = 0; i < array.length; i++) {
             if (array[i] == null) {
                 return i;
             }
         }
         return -1;
-    }
 
+}
 
     public static final int MAX_RESULTS = 5;
 
@@ -48,3 +49,4 @@ public final class SearchEngine {
         return results;
     }
 }
+

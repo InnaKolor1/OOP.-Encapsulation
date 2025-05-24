@@ -7,5 +7,4 @@ public interface Searchable {
     default String getStringRepresentation(){
         return  String.format(("%s - %s"), getSearchTerm(), getContentType());
     }
-
 }

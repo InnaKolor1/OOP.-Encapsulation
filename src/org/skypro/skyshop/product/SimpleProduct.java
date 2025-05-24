@@ -2,11 +2,14 @@ package org.skypro.skyshop.product;
 
 import java.util.Objects;
 
-public class SimpleProduct extends Product {
+public class SimpleProduct extends Product implements org.skypro.skyshop.search.Searchable {
     private final double price;
 
     public SimpleProduct(String name, double price) {
         super(name);
+        if (price<=0){
+            throw new IllegalArgumentException("Цена товара должна быть больше 0.");
+        }
         this.price = price;
     }
 

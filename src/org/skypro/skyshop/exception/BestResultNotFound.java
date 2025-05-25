@@ -1,7 +1,10 @@
+
 package org.skypro.skyshop.exception;
 
-public class BestResultNotFound extends Exception {
-    public BestResultNotFound(String message) {
+import java.io.IOException;
+
+public class BestResultNotFound extends IOException {
+    public BestResultNotFound(String message){
         super(message);
     }
 }

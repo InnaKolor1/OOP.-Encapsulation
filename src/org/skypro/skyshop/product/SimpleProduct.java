@@ -1,5 +1,6 @@
 package org.skypro.skyshop.product;
 
+import javax.swing.text.Utilities;
 import java.util.Objects;
 
 public class SimpleProduct extends Product implements org.skypro.skyshop.search.Searchable {

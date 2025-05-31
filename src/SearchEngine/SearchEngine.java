@@ -1,47 +1,26 @@
 package org.skypro.skyshop.SearchEngine;
-
 import org.skypro.skyshop.exception.BestResultNotFound;
-import org.skypro.skyshop.search.Searchable;
 import org.skypro.skyshop.Utilities.ArrayUtil;
-import java.util.Arrays;
+import org.skypro.skyshop.search.Searchable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class SearchEngine {
-    private final Searchable[] searchableItems;
-
-    public SearchEngine(int size) {
-
-        this.searchableItems = new Searchable[size];
-    }
+    private final List<Searchable> searchableItems = new ArrayList<>();
 
     public void add(Searchable searchable) {
-        int Index = ArrayUtil.getIndex(searchableItems, true);
-        if (Index == -1) {
-            throw new IllegalArgumentException("Массив элементов поиска заполнен") {
-
-            };
+        if (searchable == null) {
+            throw new IllegalArgumentException("Элемент поиска не может быть нулевым");
         }
-
-
-        searchableItems[Index] = searchable;
+        searchableItems.add(searchable);
     }
 
-
-    public static final int MAX_RESULTS = 5;
-
-    public Searchable[] search(String query) {
-        Searchable[] results = new Searchable[MAX_RESULTS];
-        Arrays.fill(results, null);
-
-        int i = 0;
+    public List<Searchable> search(String query) {
+        List<Searchable> results = new ArrayList<>();
         for (Searchable searchable : searchableItems) {
-            if (searchable == null) {
-                continue;
-            }
             if (searchable.getSearchTerm().contains(query)) {
-                results[i++] = searchable;
-                if (i >= MAX_RESULTS) {
-                    break;
-                }
+                results.add(searchable);
             }
         }
         return results;
@@ -51,30 +30,29 @@ public final class SearchEngine {
         if (searchTerm.isEmpty() || query.isEmpty()) {
             return 0;
         }
-        int count = 0, fromIndex = 0;
-        int queryLenght = query.length();
-        while ((fromIndex = searchTerm.indexOf(query, fromIndex)) != -1) ;
-        count++;
-        fromIndex += queryLenght;
-
+        int count = 0;
+        int fromIndex = 0;
+        int queryLength = query.length();
+        while ((fromIndex = searchTerm.indexOf(query, fromIndex)) != -1) {
+            count++;
+            fromIndex += queryLength;
+        }
         return count;
-
     }
 
     public Searchable searchMostRelevant(String query) throws BestResultNotFound {
-        int firstIndex = ArrayUtil.getIndex(searchableItems, false);
-        if (firstIndex == -1) {
-            throw new BestResultNotFound("Массив элементов для поиска пуст");
+        if (searchableItems.isEmpty()) {
+            throw new BestResultNotFound("Массив для поиска элементов пуст");
         }
-        Searchable mostRelevant = searchableItems[firstIndex];
-        int maxCount = countMatches(mostRelevant.getSearchTerm(), query);
-        for (Searchable searchable : searchableItems) {
-            if (searchable != null) {
-                int count = countMatches(searchable.getSearchTerm(), query);
-                if (count > maxCount) {
-                    maxCount = count;
-                    mostRelevant = searchable;
-                }
+
+        Searchable mostRelevant = null;
+        int maxCount = -1;
+
+        for (Searchable item : searchableItems) {
+            int count = countMatches(item.getSearchTerm(), query);
+            if (count > maxCount) {
+                maxCount = count;
+                mostRelevant = item;
             }
         }
 

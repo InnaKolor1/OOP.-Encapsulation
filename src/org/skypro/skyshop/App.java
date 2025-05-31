@@ -10,63 +10,111 @@ import org.skypro.skyshop.product.SimpleProduct;
 import org.skypro.skyshop.search.Searchable;
 import org.skypro.skyshop.exception.BestResultNotFound;
 
+
 import java.util.Arrays;
+import java.util.List;
 
 public class App {
     public static void main(String[] args) {
         ProductBasket productBasket = new ProductBasket();
 
         Product product1 = new SimpleProduct("ПопСокет", 530);
-        Product product2 = new FixPriceProduct("USB-C Кабель");
+        Product product2 = new FixPriceProduct("USB Кабель");
         Product product3 = new DiscountedProduct("Наушники", 4500, 30);
+        Product product4 = new SimpleProduct("Адаптер", 700);
 
         productBasket.addProduct(product1);
         productBasket.addProduct(product2);
         productBasket.addProduct(product3);
+        productBasket.addProduct(product4);
+        productBasket.addProduct(product3);
         printSeparator();
 
-        System.out.println("Добавить товар в полную корзину");
-        productBasket.addProduct(new SimpleProduct("ПопСокет", 530));
-        printSeparator();
+        System.out.print(new StringBuilder()
+                .append("Удалить корзину")
+                .append("Распечатать содержание"));
+        productBasket.printProductBasket();
 
-        System.out.println("Печать содержимого с помощью нескольких продуктов");
+
+        System.out.println(new StringBuilder("Удалить продукт-ПопСокет"));
+        productBasket.deleteProductsByName("Попсокет");
+        productBasket.printDeletedProducts();
+        System.out.println();
+        productBasket.printProductBasket();
+
+        System.out.println(new StringBuilder("Удалить продукт-Наушники"));
+        productBasket.deleteProductsByName("Удалить продукт-Наушники");
+        productBasket.printDeletedProducts();
+        System.out.println();
         productBasket.printProductBasket();
         printSeparator();
 
-        System.out.println("Сумма чека корзины с несколькими товарами");
-        System.out.println("Окончательная стоимость: " + productBasket.getSumOfProducts());
-        System.out.println("Поиск товара в корзине");
-
-        String name = "HDMI Кабель";
-        System.out.println(name + " " + productBasket.checkProduct(name));
+        System.out.println(new StringBuilder("Распечатать содержимое с помощью нескольких продуктов"));
+        productBasket.printProductBasket();
         printSeparator();
 
-        System.out.println("Печать содержимого перед стиранием");
+        System.out.println(new StringBuilder()
+                .append("Стоимость корзины с несколькими продуктами")
+                .append("Общая стоимость корзины: ")
+                .append(productBasket.getSumOfProducts()));
+        printSeparator();
+
+
+        String name = "HDMI Кабель";
+        System.out.println(new StringBuilder()
+                .append("Поиск товара, который находится в корзине")
+                .append(name)
+                .append(" - ")
+                .append(productBasket.checkProduct(name)));
+        printSeparator();
+
+        name = "Телефон";
+        System.out.println(new StringBuilder()
+                .append("Поиск товара, Которого нет в корзине")
+                .append(name)
+                .append(" - ")
+                .append(productBasket.checkProduct(name)));
+        printSeparator();
+
+        System.out.println(new StringBuilder("Печать содержимого перед стиранием"));
         productBasket.printProductBasket();
         productBasket.cleanBasket();
         printSeparator();
 
-        System.out.println("Печать пустой корзины");
+        System.out.println(new StringBuilder("Печать пустой корзины"));
         productBasket.printProductBasket();
         printSeparator();
 
-        System.out.println("Цена пустой корзины");
-        productBasket.printProductBasket();
-        System.out.println("Окончательная стоимость тележки: " + productBasket.getSumOfProducts());
+        System.out.println(new StringBuilder()
+                .append("Цена пустого")
+                .append("Общая стоимость корзины: ")
+                .append(productBasket.getSumOfProducts()));
         printSeparator();
 
-        System.out.println("Поиск товара в пустой корзине");
-        name = "Клавиатура";
-        System.out.println(name + " " + productBasket.checkProduct(name));
+        name = "Мышь";
+        System.out.println(new StringBuilder()
+                .append("Поиск товара по названию в пустой корзине")
+                .append(name)
+                .append(" - ")
+                .append(productBasket.checkProduct(name)));
         printSeparator();
+
+
+        System.out.println("Сумма чека корзины с несколькими товарами");
+        System.out.println("Окончательная стоимсоть: " + productBasket.getSumOfProducts());
+        System.out.println("Поиск товара в корзине");
+        printSeparator();
+
 
         Article article1 = new Article("ПопСокет.", "Это универсальный держатель для телефона.");
         Article article2 = new Article("USB-C Кабель.", "Последовательный интерфейс для подключения периферийных устройств к вычислительной технике.");
         Article article3 = new Article("Наушники.", "Новая модель и функция шумоподавления.");
 
 
-        SearchEngine searchEngine = new SearchEngine(6);
+        SearchEngine searchEngine = new SearchEngine();
+
         try {
+
             searchEngine.add(product1);
             searchEngine.add(product2);
             searchEngine.add(product3);
@@ -74,244 +122,166 @@ public class App {
             searchEngine.add(article2);
             searchEngine.add(article3);
         } catch (IllegalArgumentException ex) {
-            System.out.println("Error: " + ex.getMessage());
+
+            System.out.println(new StringBuilder("Ошибка: " + ex.getMessage()));
+            return;
         }
-        System.out.println();
 
         String query = "Наушники";
-        Searchable[] searchResults = searchEngine.search(query);
-        System.out.println("Результаты поиска " + query + ": " + Arrays.toString(searchResults));
 
-        query = "Клавиатура";
-        searchResults = searchEngine.search(query);
-        System.out.println("Результаты поиска " + query + ": " + Arrays.toString(searchResults));
+        System.out.println(new StringBuilder()
+                .append("Поиск результата ")
+                .append(query)
+                .append(": ")
+                .append(searchEngine.search(query))
+                .append("\n"));
 
-        query = "Случай";
-        searchResults = searchEngine.search(query);
-        System.out.println("Результаты поиска " + query + ": " + Arrays.toString(searchResults));
 
-        query = "Наклейка";
-        searchResults = searchEngine.search(query);
+        query = "Мышь";
+        System.out.println(new StringBuilder()
+                .append("Поиск результата ")
+                .append(query)
+                .append(": ")
+                .append(searchEngine.search(query))
+                .append("\n"));
 
-        System.out.println("Результаты поиска " + query + ": " + Arrays.toString(searchResults));
+        query = "Провод";
+        System.out.println(new StringBuilder()
+                .append("Поиск результата ")
+                .append(query)
+                .append(": ")
+                .append(searchEngine.search(query))
+                .append("\n"));
 
-        System.out.println();
+        query = "Ноутбук";
+        System.out.println(new StringBuilder()
+                .append("Поиск результата ")
+                .append(query)
+                .append(": ")
+                .append(searchEngine.search(query))
+                .append("\n"));
 
-        System.out.println("Результат поиска по имени: ");
 
+        System.out.println(new StringBuilder("Поиск результата по имени: "));
+
+        List<Searchable> searchResults = searchEngine.search(query);
         for (Searchable searchResult : searchResults) {
             if (searchResult != null) {
-                System.out.println("Имя для поиска: " + searchResult.getStringRepresentation());
-                try {
-                    Product product = new SimpleProduct("ПопСокет ", 530);
-                } catch (IllegalArgumentException e) {
-                    System.err.println("Ошибка при создании товара" + e.getMessage());
-                }
-                try {
-                    Product product = new FixPriceProduct(" USB-C Кабель");
-                } catch (IllegalArgumentException e) {
-                    System.err.println("Ошибка при создании товара" + e.getMessage());
-                    try {
-                        Product product4 = new SimpleProduct(" ", -1);
-                    } catch (IllegalArgumentException ex) {
-                        System.out.println("Ошибка: " + ex.getMessage());
-                    }
-                    System.out.println();
-
-                    System.out.println("Создать FixPriceProduct с неправильным именем:");
-                    try {
-                        Product product4 = new FixPriceProduct(" ");
-                    } catch (IllegalArgumentException ex) {
-                        System.out.println("Ошибка: " + ex.getMessage());
-                    }
-                    System.out.println();
-
-                    System.out.println("Создать DiscountedProduct с неправильной ценой:");
-
-                    try {
-                        Product product4 = new DiscountedProduct(" ", 170, 15);
-                    } catch (IllegalArgumentException ex) {
-                        System.out.println("Ошибка: " + ex.getMessage());
-                    }
-                    System.out.println();
-
-                    System.out.println("Создать DiscountedProduct с неправильной ценой:");
-                    try {
-                        Product product4 = new DiscountedProduct("Papers", -1, 5);
-                    } catch (IllegalArgumentException ex) {
-                        System.out.println("Ошибка: " + ex.getMessage());
-                    }
-                    System.out.println();
-
-                    System.out.println("Создать DiscountedProduct с некоторой скидкой:");
-                    try {
-                        Product product4 = new DiscountedProduct("Стикерпак", 300, 200);
-                    } catch (IllegalArgumentException ex) {
-                        System.out.println("Ошибка: " + ex.getMessage());
-                    }
-                    printSeparator();
-
-
-                    System.out.println("Создать SimpleProduct с пустым именем:");
-                    try {
-                        Product product4 = new SimpleProduct(" ", 1);
-                    } catch (IllegalArgumentException ex) {
-                        System.out.println("Ошибка: " + ex.getMessage());
-                    }
-                    System.out.println();
-
-                    System.out.println("Создать SimpleProduct с пустым именем:");
-                    try {
-                        Product product4 = new SimpleProduct(" ", 1);
-                    } catch (IllegalArgumentException ex) {
-                        System.out.println("Ошибка: " + ex.getMessage());
-                    }
-                    System.out.println();
-
-                    System.out.println("Создать SimpleProduct с неправильной ценой:");
-                    try {
-                        Product product4 = new SimpleProduct("Magic Pencil", -1);
-                    } catch (IllegalArgumentException ex) {
-                        System.out.println("Ошибка: " + ex.getMessage());
-                    }
-                    System.out.println();
-
-                    System.out.println("Создание SimpleProduct с неправильной ценой:");
-                    try {
-                        Product product4 = new SimpleProduct(" ", -1);
-                    } catch (IllegalArgumentException ex) {
-                        System.out.println("Ошибка: " + ex.getMessage());
-                    }
-                    System.out.println();
-
-                    System.out.println("Создать FixPriceProduct с неправильным именем:");
-                    try {
-                        Product product4 = new FixPriceProduct(" ");
-                    } catch (IllegalArgumentException ex) {
-                        System.out.println("Ошибка: " + ex.getMessage());
-                    }
-                    System.out.println();
-
-                    System.out.println("Создать DiscountedProduct с неправильной ценой:");
-
-                    try {
-                        Product product4 = new DiscountedProduct(" ", 170, 15);
-                    } catch (IllegalArgumentException ex) {
-                        System.out.println("Ошибка: " + ex.getMessage());
-                    }
-                    System.out.println();
-
-                    System.out.println("Создать DiscountedProduct с неправильной ценой:");
-                    try {
-                        Product product4 = new DiscountedProduct("Бумага", -1, 5);
-                    } catch (IllegalArgumentException ex) {
-                        System.out.println("Ошибка: " + ex.getMessage());
-                    }
-                    System.out.println();
-
-                    System.out.println("Создать DiscountedProduct с некоторой скидкой:");
-                    try {
-                        Product product4 = new DiscountedProduct("Стикерпак", 300, 200);
-                    } catch (IllegalArgumentException ex) {
-                        System.out.println("Ошибка: " + ex.getMessage());
-                    }
-                    printSeparator();
-                }
-            }
-
-            System.out.println("Создать SimpleProduct с пустым именем:");
-            try {
-                Product product4 = new SimpleProduct(" ", 1);
-            } catch (IllegalArgumentException ex) {
-                System.out.println("Ошибка: " + ex.getMessage());
-            }
-            System.out.println();
-
-            System.out.println("Создать SimpleProduct с пустым именем:");
-            try {
-                Product product4 = new SimpleProduct(" ", 1);
-            } catch (IllegalArgumentException ex) {
-                System.out.println("Ошибка: " + ex.getMessage());
-            }
-            System.out.println();
-
-            System.out.println("Создать SimpleProduct с неправильной ценой:");
-            try {
-                Product product4 = new SimpleProduct("Magic Pencil", -1);
-            } catch (IllegalArgumentException ex) {
-                System.out.println("Ошибка: " + ex.getMessage());
-            }
-            System.out.println();
-
-            System.out.println("Создать SimpleProduct с неправильной ценой:");
-            try {
-                Product product4 = new SimpleProduct(" ", -1);
-            } catch (IllegalArgumentException ex) {
-                System.out.println("Ошибка: " + ex.getMessage());
-            }
-            System.out.println();
-
-            System.out.println("Создать FixPriceProduct с неправильной ценой:");
-            try {
-                Product product4 = new FixPriceProduct(" ");
-            } catch (IllegalArgumentException ex) {
-                System.out.println("Ошибка: " + ex.getMessage());
-            }
-            System.out.println();
-
-            System.out.println("Создать DiscountedProduct с неправильной ценой:");
-
-            try {
-                Product product4 = new DiscountedProduct(" ", 170, 15);
-            } catch (IllegalArgumentException ex) {
-                System.out.println("Ошибка: " + ex.getMessage());
-            }
-            System.out.println();
-
-            System.out.println("Создать DiscountedProduct с нерпавильной ценой:");
-            try {
-                Product product4 = new DiscountedProduct("Papers", -1, 5);
-            } catch (IllegalArgumentException ex) {
-                System.out.println("Ошибка: " + ex.getMessage());
-            }
-            System.out.println();
-
-            System.out.println("Создать DiscountedProduct с некоторой скидкой:");
-            try {
-                Product product4 = new DiscountedProduct("Стикерпак", 300, 200);
-            } catch (IllegalArgumentException ex) {
-                System.out.println("Ошибка: " + ex.getMessage());
+                System.out.println(new StringBuilder()
+                        .append("Имя для поиска: ")
+                        .append(searchResult.getStringRepresentation()));
             }
         }
-            printSeparator();
 
 
-            Searchable bestResult;
+        System.out.println(new StringBuilder("Создать SimpleProduct без имени:"));
+        try {
+            Product product10 = new SimpleProduct(" ", 1);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(new StringBuilder()
+                    .append("Ощибка: ")
+                    .append(ex.getMessage())
+                    .append("\n"));
+        }
 
-            query = "загадка эрудированный";
-            System.out.println("поиск лучшего результата для " + query + "   ");
-            try {
-                bestResult = searchEngine.searchMostRelevant(query);
-                System.out.println("Результаты поиска " + query + ": " + bestResult);
-            } catch (BestResultNotFound ex) {
-                System.out.println("Ошибка: " + ex.getMessage());
-
-                System.out.println();
-
-                query = " ";
-                System.out.println("поиск лучшего результата для " + query + "");
-            }
-            try {
-                bestResult = searchEngine.searchMostRelevant(query);
-                System.out.println("Результаты поиска " + query + ": " + bestResult);
-            } catch (BestResultNotFound ex) {
-
-                System.out.println("Ошибка: " + ex.getMessage());
-            }
-            System.out.println();
+        System.out.println("Создать SimpleProduct без имени:");
+        try {
+            Product product10 = new SimpleProduct("ПопСокет", 1);
+        } catch (IllegalArgumentException ex) {
+            System.out.println("Ошибка: " + ex.getMessage());
         }
 
 
-        public static void printSeparator () {
+        System.out.println(new StringBuilder("Создать FixPriceProduct с неверным именем:"));
+        try {
+            Product product10 = new FixPriceProduct("  ");
+        } catch (IllegalArgumentException ex) {
+            System.out.println(new StringBuilder()
+                    .append("Ошибка: ")
+                    .append(ex.getMessage())
+                    .append("\n"));
+        }
+
+        System.out.println(new StringBuilder("Создать DiscountedProduct с неверным именем:"));
+        try {
+            Product product10 = new DiscountedProduct(" ", 500, 20);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(new StringBuilder()
+                    .append("Ошибка: ")
+                    .append(ex.getMessage())
+                    .append("\n"));
+        }
+
+        System.out.println(new StringBuilder("Создать DiscountedProduct с неверной ценой:"));
+        try {
+            Product product10 = new DiscountedProduct("Наушники", 3300, 40);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(new StringBuilder()
+                    .append("Ошибка: ")
+                    .append(ex.getMessage())
+                    .append("\n"));
+
+        }
+        System.out.println(new StringBuilder("Создать DiscountedProduct с неправильной скидкой: "));
+        try {
+            Product product10 = new DiscountedProduct("Наушники", 4500, 200);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(new StringBuilder()
+                    .append("Ошибка: ")
+                    .append(ex.getMessage())
+                    .append("\n"));
+
+        }
+
+        printSeparator();
+
+
+        Searchable bestResult;
+
+        query = "Загадка эрудированный";
+        System.out.println(new StringBuilder()
+                .append("Поиск лучших результатов по запросу ")
+                .append(query)
+                .append("..."));
+        try {
+            bestResult = searchEngine.searchMostRelevant(query);
+            System.out.println(new StringBuilder()
+                    .append("Поиск результата ")
+                    .append(query)
+                    .append(": ")
+                    .append(bestResult));
+
+        } catch (BestResultNotFound ex) {
+
+            System.out.println(new StringBuilder()
+                    .append("Ошибка: ")
+                    .append(ex.getMessage())
+                    .append("\n"));
+
+            query = "Книга";
+            System.out.println(new StringBuilder()
+                    .append("Поиск лучших результатов по запросу ")
+                    .append(query)
+                    .append(" "));
+        }
+        try {
+            bestResult = searchEngine.searchMostRelevant(query);
+            System.out.println(new StringBuilder()
+                    .append("Поиск результата ")
+                    .append(query)
+                    .append(": ")
+                    .append(bestResult));
+        } catch (BestResultNotFound ex) {
+            System.out.println(new StringBuilder()
+                    .append("Ошибка: ")
+                    .append(ex.getMessage())
+                    .append("\n"));
         }
     }
+
+    public static void printSeparator() {
+
+        System.out.println(new StringBuilder("\n____________________________________________________________________________\n"));
+
+    }
+}

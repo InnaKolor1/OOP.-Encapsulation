@@ -1,50 +1,54 @@
 package org.skypro.skyshop.product;
-
 import org.skypro.skyshop.search.Searchable;
-
 import java.util.Objects;
 
-public abstract class Product implements Searchable {
-    private final String name;
+    public abstract class Product implements Searchable {
+        private final String name;
 
-    public Product(String name) {
-        if (name==null||name.isBlank()){
-            throw new IllegalArgumentException("Название продукта не может быть пустым.");
+        public Product(String name) {
+            if (name == null | name.isBlank()) {
+                throw new IllegalArgumentException(
+                        new StringBuilder("Название продукта не может быть пустым").toString()
+                );
+            }
+            this.name = name;
         }
-        this.name = name;
-    }
 
-    public String getName() {
-        return name;
-    }
 
-    public abstract double getPrice();
+        public String getName() {
 
-    public abstract boolean isSpecial();
+            return name;
+        }
 
-    @Override
-    public String getSearchTerm(){
-        return getName();
-    }
-    @Override
-    public String getContentType(){
-        return "PRODUCT";
-    }
+        public abstract double getPrice();
 
-    @Override
-    public String toString() {
-        return name;
-    }
+        public abstract boolean isSpecial();
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return Objects.equals(name, product.name);
-    }
+        @Override
+        public String getSearchTerm() {
+            return getName();
+        }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
+        @Override
+        public String getContentType() {
+            return "PRODUCT";
+        }
+
+        @Override
+        public String toString() {
+            return new StringBuilder(name).toString();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Product product = (Product) o;
+            return Objects.equals(name, product.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name);
+        }
     }
-}

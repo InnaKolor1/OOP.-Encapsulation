@@ -1,8 +1,5 @@
-
 package org.skypro.skyshop.Utilities;
 import org.skypro.skyshop.exception.BestResultNotFound;
-
-import javax.swing.text.Utilities;
 
 public class ArrayUtil {
 
@@ -15,4 +12,3 @@ public class ArrayUtil {
         return -1;
     }
 }
-

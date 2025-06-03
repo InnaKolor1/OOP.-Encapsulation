@@ -7,27 +7,34 @@ import java.util.*;
 
 
 public class ProductBasket {
-    private final List<Product> basket = new ArrayList<>();
+    private final Map<String, List<Product>> basket = new HashMap<>();
     private final List<Product> deletedProducts = new LinkedList<>();
 
     public void addProduct(Product product) {
-        basket.add(product);
+        String productName = product.getName();
+        List<Product> productList = basket.getOrDefault(productName, new ArrayList<>());
+        productList.add(product);
+        basket.put(productName, productList);
     }
 
     public List<Product> deleteProductsByName(String name) {
-        Iterator<Product> iterator = basket.iterator();
-        while (iterator.hasNext()) {
-            Product product = iterator.next();
-            if (product != null && Objects.equals(product.getName(), name)) {
-                deletedProducts.add(product);
-                iterator.remove();
+        deletedProducts.clear();
+        for (Map.Entry<String, List<Product>> entry : basket.entrySet()) {
+            List<Product> products = entry.getValue();
+            Iterator<Product> iterator = products.iterator();
+            while (iterator.hasNext()) {
+                Product product = iterator.next();
+                if (product != null && Objects.equals(product.getName(), name)) {
+                    deletedProducts.add(product);
+                    iterator.remove();
+                }
             }
         }
         return deletedProducts;
     }
 
     public void printDeletedProducts() {
-        StringBuilder sb = new StringBuilder("Список удаленных продуктов");
+        StringBuilder sb = new StringBuilder("Список удаленных продуктов:\n");
         if (!deletedProducts.isEmpty()) {
             for (Product product : deletedProducts) {
                 sb.append(product).append("\n");
@@ -40,48 +47,51 @@ public class ProductBasket {
 
     public double getSumOfProducts() {
         double sum = 0;
-        for (Product product : basket) {
-            if (product != null) {
-                sum += product.getPrice();
+        for (List<Product> products : basket.values()) {
+            for (Product product : products) {
+                if (product != null) {
+                    sum += product.getPrice();
+                }
             }
         }
         return sum;
     }
 
-    private boolean basketIsNotEmpty() {
+    private boolean basketIsNotNull() {
         return !basket.isEmpty();
     }
 
     public void printProductBasket() {
-        if (!basketIsNotEmpty()) {
-            System.out.println("Корзина пуста");
+        if (!basketIsNotNull()) {
+            System.out.println("Корзина пуста!");
             return;
         }
         StringBuilder sb = new StringBuilder();
         double sum = 0;
-        int specialGoods = 0;
-
-        for (Product product : basket) {
-            if (product != null) {
-                sb.append(product).append("\n");
-                sum += product.getPrice();
-                if (product.isSpecial()) {
-                    specialGoods++;
+        int specialCount = 0;
+        for (List<Product> products : basket.values()) {
+            for (Product product : products) {
+                if (product != null) {
+                    sb.append(product).append("\n");
+                    sum += product.getPrice();
+                    if (product.isSpecial()) {
+                        specialCount++;
+                    }
                 }
             }
         }
-
         sb.append("--------------------------------------------------\n")
                 .append(String.format("Итого: %.2f ₽\n", sum))
-                .append(String.format("Специальные товары: %d\n", specialGoods));
-
+                .append(String.format("Специальных товаров: %d\n", specialCount));
         System.out.println(sb.toString());
     }
 
     public boolean checkProduct(String name) {
-        for (Product product : basket) {
-            if (product != null && Objects.equals(product.getName(), name)) {
-                return true;
+        for (List<Product> products : basket.values()) {
+            for (Product product : products) {
+                if (product != null && Objects.equals(product.getName(), name)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -89,5 +99,7 @@ public class ProductBasket {
 
     public void cleanBasket() {
         basket.clear();
+
+
     }
-}
+        }

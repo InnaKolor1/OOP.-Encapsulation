@@ -13,6 +13,7 @@ import org.skypro.skyshop.exception.BestResultNotFound;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class App {
     public static void main(String[] args) {
@@ -164,13 +165,17 @@ public class App {
 
         System.out.println(new StringBuilder("Поиск результата по имени: "));
 
-        List<Searchable> searchResults = searchEngine.search(query);
-        for (Searchable searchResult : searchResults) {
+        Map<String, Searchable> searchResults = searchEngine.search(query);
+        for (Map.Entry<String, Searchable> entry : searchResults.entrySet()) {
+            Searchable searchResult = entry.getValue();
             if (searchResult != null) {
                 System.out.println(new StringBuilder()
-                        .append("Имя для поиска: ")
+                        .append("Имя searchable: ")
                         .append(searchResult.getStringRepresentation()));
+
             }
+            printSeparator();
+
         }
 
 
@@ -264,6 +269,7 @@ public class App {
                     .append(query)
                     .append(" "));
         }
+
         try {
             bestResult = searchEngine.searchMostRelevant(query);
             System.out.println(new StringBuilder()

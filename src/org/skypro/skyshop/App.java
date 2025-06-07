@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+
 public class App {
     public static void main(String[] args) {
         ProductBasket productBasket = new ProductBasket();
@@ -38,12 +39,12 @@ public class App {
 
 
         System.out.println(new StringBuilder("Удалить продукт-ПопСокет"));
-        productBasket.deleteProductsByName("Попсокет");
+        productBasket.deleteAndPrintProductsByName(" ПопСокет ");
         System.out.println();
         productBasket.printProductBasket();
 
         System.out.println(new StringBuilder("Удалить продукт-Наушники"));
-        productBasket.deleteProductsByName("Удалить продукт-Наушники");
+        productBasket.deleteAndPrintProductsByName(" Наушники ");
         System.out.println();
         productBasket.printProductBasket();
         printSeparator();

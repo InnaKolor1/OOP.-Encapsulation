@@ -21,6 +21,7 @@ public class ProductBasket {
         return basket.remove(name);
     }
 
+
     public void deleteAndPrintProductsByName(String name) {
         List<Product> deletedProducts = deleteProductsByName(name);
         StringBuilder sb = new StringBuilder("Список удаленных продуктов:\n");
@@ -77,6 +78,7 @@ public class ProductBasket {
 
         System.out.println(sb.toString());
     }
+
 
     public boolean checkProduct(String name) {
         for (List<Product> products : basket.values()) {

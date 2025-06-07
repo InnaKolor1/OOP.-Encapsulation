@@ -39,13 +39,11 @@ public class App {
 
         System.out.println(new StringBuilder("Удалить продукт-ПопСокет"));
         productBasket.deleteProductsByName("Попсокет");
-        productBasket.printDeletedProducts();
         System.out.println();
         productBasket.printProductBasket();
 
         System.out.println(new StringBuilder("Удалить продукт-Наушники"));
         productBasket.deleteProductsByName("Удалить продукт-Наушники");
-        productBasket.printDeletedProducts();
         System.out.println();
         productBasket.printProductBasket();
         printSeparator();

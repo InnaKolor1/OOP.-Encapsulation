@@ -78,6 +78,7 @@ public class ProductBasket {
         System.out.println(sb.toString());
     }
 
+
     public boolean checkProduct(String name) {
         for (List<Product> products : basket.values()) {
             for (Product product : products) {

@@ -1,5 +1,6 @@
 package org.skypro.skyshop;
 
+import jdk.jfr.SettingControl;
 import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.SearchEngine.SearchEngine;
 import org.skypro.skyshop.article.Article;
@@ -14,6 +15,7 @@ import org.skypro.skyshop.exception.BestResultNotFound;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class App {
@@ -164,18 +166,15 @@ public class App {
 
         System.out.println(new StringBuilder("Поиск результата по имени: "));
 
-        Map<String, Searchable> searchResults = searchEngine.search(query);
-        for (Map.Entry<String, Searchable> entry : searchResults.entrySet()) {
-            Searchable searchResult = entry.getValue();
-            if (searchResult != null) {
-                System.out.println(new StringBuilder()
-                        .append("Имя searchable: ")
-                        .append(searchResult.getStringRepresentation()));
+        Set<Searchable> searchResults = searchEngine.search(query);
+        System.out.println(new StringBuilder("Результаты поиска")
+                        .append(query)
+                        .append(":"));
+        for(Searchable result:searchResults){
+            System.out.println("-"+result.getStringRepresentation());
 
             }
             printSeparator();
-
-        }
 
 
         System.out.println(new StringBuilder("Создать SimpleProduct без имени:"));

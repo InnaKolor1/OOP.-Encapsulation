@@ -1,9 +1,16 @@
 
 package org.skypro.skyshop.exception;
 
-import java.io.IOException;
-public class BestResultNotFound extends IOException {
-    public BestResultNotFound(String message){
-        super(message);
+public class BestResultNotFound extends Exception{
+
+    private final String name;
+
+    public BestResultNotFound(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Для запроса " + name + " не нашлось статьи" + '}';
     }
 }

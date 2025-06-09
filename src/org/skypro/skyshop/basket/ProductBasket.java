@@ -3,96 +3,61 @@ package org.skypro.skyshop.basket;
 import org.skypro.skyshop.product.Product;
 
 import java.util.*;
-
-
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ProductBasket {
-    private final Map<String, List<Product>> basket = new HashMap<>();
+    private final Map<String, LinkedList<Product>> productBasket = new HashMap<>();
 
     public void addProduct(Product product) {
-        String productName = product.getName();
-        List<Product> productList = basket.getOrDefault(productName, new ArrayList<>());
-        productList.add(product);
-        basket.put(productName, productList);
+        productBasket.computeIfAbsent(product.getName(), k -> new LinkedList<>()).add(product);
     }
 
-
-    public List<Product> deleteProductsByName(String name) {
-        return basket.remove(name);
-    }
-
-
-    public void deleteAndPrintProductsByName(String name) {
-        List<Product> deletedProducts = deleteProductsByName(name);
-        StringBuilder sb = new StringBuilder("Список удаленных продуктов:\n");
-        if (deletedProducts == null || deletedProducts.isEmpty()) {
-            sb.append("Список пуст");
-        } else {
-            for (Product product : deletedProducts) {
-                sb.append(product).append("\n");
-            }
-        }
-        System.out.println(sb);
-    }
-
-    public double getSumOfProducts() {
-        double sum = 0;
-        for (List<Product> products : basket.values()) {
-            for (Product product : products) {
-                if (product != null) {
-                    sum += product.getPrice();
-                }
-            }
-        }
+    public double calculateSumOfBasket() {
+        double sum = productBasket.values().stream().flatMap(Collection::stream)
+                .mapToDouble(x -> x.getPrice())
+                .sum();
         return sum;
     }
 
-    private boolean basketIsNotNull() {
-        return !basket.isEmpty();
-    }
-
     public void printProductBasket() {
-        if (!basketIsNotNull()) {
-            System.out.println("Корзина пуста!");
-            return;
+        double sum = calculateSumOfBasket();
+        Stream<Product> basket = productBasket.values().stream().flatMap(Collection::stream);
+        if (sum == 0) {
+            System.out.println("в корзине пусто");
+        } else {
+            long specialCount = calculateSpecialProducts();
+            basket.forEach(System.out::println);
+            System.out.println("Итого: " + sum);
+            System.out.println("Специальных товаров: " + specialCount);
         }
+    }
 
-        StringBuilder sb = new StringBuilder();
-        double sum = 0;
-        int specialCount = 0;
-        for (List<Product> products : basket.values()) {
-            for (Product product : products) {
-                if (product != null) {
-                    sb.append(product).append("\n");
-                    sum += product.getPrice();
-                    if (product.isSpecial()) {
-                        specialCount++;
-                    }
-                }
-            }
+    private long calculateSpecialProducts() {
+        return productBasket.values().stream().flatMap(Collection::stream)
+                .filter(x -> x.isSpecial())
+                .count();
+    }
+
+    public boolean searchProduct(String name) {
+        return productBasket.values().stream().flatMap(Collection::stream)
+                .anyMatch(p -> p.getName().equalsIgnoreCase(name));
+    }
+
+    public void clear() {
+        productBasket.clear();
+    }
+
+    public List<Product> removeThisProduct(String name) {
+        List<Product> removedProducts = new LinkedList<>();
+        if (productBasket.containsKey(name)) {
+            removedProducts.addAll(productBasket.remove(name));
         }
-
-        sb.append("--------------------------------------------------\n")
-                .append(String.format("Итого: %.2f ₽\n", sum))
-                .append(String.format("Специальных товаров: %d\n", specialCount));
-
-        System.out.println(sb.toString());
+        if (removedProducts.isEmpty()) {
+            System.out.println("Список пуст");
+        }
+        return removedProducts;
     }
 
 
-    public boolean checkProduct(String name) {
-        for (List<Product> products : basket.values()) {
-            for (Product product : products) {
-                if (product != null && Objects.equals(product.getName(), name)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public void cleanBasket() {
-        basket.clear();
-
-    }
 }

@@ -1,13 +1,12 @@
 package org.skypro.skyshop.search;
 public interface Searchable {
-    String getSearchTerm();
-    String getContentType();
+    public  String getSearchTerm();
+
+    public String getContentType();
+
+    String getName();
 
     default String getStringRepresentation() {
-        return new StringBuilder()
-                .append(getSearchTerm())
-                .append(" - ")
-                .append(getContentType())
-                .toString();
+        return getName() + "-" + getContentType();
     }
 }
